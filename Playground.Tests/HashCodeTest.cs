@@ -1,40 +1,101 @@
-﻿namespace Playground.Tests;
+﻿using Xunit.Abstractions;
+
+namespace Playground.Tests;
 
 public class HashCodeTest
 {
-    private class MutableHash
+    private class HashKeyObject
     {
-        private int _lastHashCode = 0;
-        public int IValue { get; set; }
-        
-        public MutableHash(int i)
+        private readonly bool _breakHash;
+        private readonly bool _breakEquals;
+
+        public int Value { get; }
+
+        public HashKeyObject(int i, bool breakHash = false, bool breakEquals = false)
         {
-            IValue = i;
+            _breakHash = breakHash;
+            _breakEquals = breakEquals;
+            Value = i;
         }
 
         public override int GetHashCode()
         {
-            return _lastHashCode++;
+            return _breakHash ? new Random().Next() : Value.GetHashCode();
         }
 
         public override bool Equals(object? obj)
         {
-            return false;
+            if (_breakEquals)
+            {
+                return false;
+            }
+
+            var casted = obj as HashKeyObject;
+            if (casted is null)
+            {
+                return false;
+            }
+
+            return casted.Value == Value;
         }
     }
-    
-    
+
+
+    [Fact]
+    public void ExpectedBehavior()
+    {
+        var keys = BuildKeyList(10, breakHash: false, breakEquals: false);
+        var dict = BuildDictionary(keys);
+
+        foreach (var key in keys)
+        {
+            Assert.True(dict.ContainsKey(key));
+        }
+    }
+
+    [Fact]
+    public void RandomizedHash()
+    {
+        var keys = BuildKeyList(size: 10, breakHash: true, breakEquals: false);
+        var dict = BuildDictionary(keys);
+
+        var itemsFound = keys.Count(key => dict.ContainsKey(key));
+        
+        Assert.True(itemsFound == 0);
+    }
     
     [Fact]
-    public void Test1()
+    public void BrokenEquals()
     {
-        var item = new MutableHash(0);
+        var keys = BuildKeyList(size: 10, breakHash: false, breakEquals: true);
+        var dict = BuildDictionary(keys);
 
-        Dictionary<MutableHash, int> d = new Dictionary<MutableHash, int>()
+        var itemsFound = keys.Count(key => dict.ContainsKey(key));
+        
+        Assert.True(itemsFound == 0);
+    }
+
+    private List<HashKeyObject> BuildKeyList(int size, bool breakHash, bool breakEquals)
+    {
+        List<HashKeyObject> result = new List<HashKeyObject>();
+
+        for (int i = 0; i < size; i++)
         {
-            [item] = item.IValue
-        };
+            result.Add(new HashKeyObject(i, breakHash, breakEquals));
+        }
 
-        Assert.False(d.ContainsKey(item));
+        return result;
+    }
+
+    private Dictionary<HashKeyObject, int> BuildDictionary(List<HashKeyObject> keyList)
+    {
+        var res = new Dictionary<HashKeyObject, int>();
+
+        foreach (var key in keyList)
+        {
+            res[key] = key.Value;
+        }
+
+        return res;
     }
 }

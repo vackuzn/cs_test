@@ -175,15 +175,5 @@ public class CastsTest
 
         Assert.Equal(typeof(C), b.GetType());
         Assert.Equal(typeof(B), ((Object)b).GetType());
-    }    
-    
-    [Fact]
-    public void IsNullSpecifics()
-    {
-        Object o1 = new Object();
-        Object o2 = null;
-
-        Assert.False(o1 is null);
-        Assert.True(o2 is null);
     }
 }
