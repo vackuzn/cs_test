@@ -61,4 +61,27 @@ public class IdentityEquality
         Assert.True(o1 is not null);
         Assert.False((object)o1 == null);   // cast to object, overload == on MyClass is not used
     }
+
+    const int I = 5;
+    [Fact]
+    public void IsExamples()
+    {
+        Assert.False(10 is I);
+
+        object a = 5;
+        Assert.True(a is I);
+
+        a = null;
+        Assert.False(a is I);
+        
+        object n = null;
+        // a is n - n constant expected
+    }
+
+    [Fact]
+    public void RefEquals()
+    {
+        Assert.True(object.ReferenceEquals(null, null));
+    }
+
 }
