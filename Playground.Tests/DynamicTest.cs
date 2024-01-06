@@ -40,7 +40,7 @@ public class DynamicTest
         {
             value = (demo == 0) ? (dynamic)5 : (dynamic)"A";
             value = value + value;
-            var res = M(_testOutputHelper, value);
+            M(_testOutputHelper, value);
         }
     }
 

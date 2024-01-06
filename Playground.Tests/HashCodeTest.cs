@@ -40,6 +40,11 @@ public class HashCodeTest
         }
     }
 
+    struct SomeKey
+    {
+
+    }
+
 
     [Fact]
     public void ExpectedBehavior()
@@ -73,6 +78,14 @@ public class HashCodeTest
         var itemsFound = keys.Count(key => dict.ContainsKey(key));
         
         Assert.True(itemsFound == 0);
+    }    
+
+    [Fact]
+    public void StructAsKey()
+    {
+        var key = new SomeKey();
+        var d = new Dictionary<SomeKey, int>();
+        d[key] = 1;
     }
 
     private List<HashKeyObject> BuildKeyList(int size, bool breakHash, bool breakEquals)

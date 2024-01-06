@@ -37,7 +37,7 @@ public class UsingTest
     }
     
     [Fact]
-    public void Test1()
+    public void UsingExample()
     {
         A a = new A(_testOutputHelper);
 
@@ -50,12 +50,19 @@ public class UsingTest
     }
     
     [Fact]
-    public void Test2()
+    public void ExceptionInUsingInitExample()
     {
-        using (A a = new A(_testOutputHelper, true)) 
+        try
         {
-            _testOutputHelper.WriteLine("using");
+            using (A a = new A(_testOutputHelper, true))
+            {
+                _testOutputHelper.WriteLine("using");
+            }
+        } catch (Exception e)
+        {
+
         }
+
         
         _testOutputHelper.WriteLine("done");
     }

@@ -26,13 +26,18 @@ public class TryCatch
     [Fact]
     public void TryFinally()
     {
-        try
+        var l = () =>
         {
-            throw new MyException();
-        }
-        finally
-        {
-        }
+            try
+            {
+                throw new MyException();
+            }
+            finally
+            {
+            }
+        };
+
+        Assert.Throws<MyException>(l);
     }
     
     [Fact]

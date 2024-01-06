@@ -34,8 +34,7 @@ public class Tricks
     public void Test2()
     {
         var s = (String)null;
-
-        s.GetType();
+        Assert.Throws<NullReferenceException>(() => s.GetType());
     }
 
     [Fact]
